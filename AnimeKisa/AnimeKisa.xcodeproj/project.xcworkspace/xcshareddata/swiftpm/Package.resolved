@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "keychain-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/evgenyneu/keychain-swift.git",
+      "state" : {
+        "revision" : "265806607b45687a3d646e4c9837c31c90f202e8",
+        "version" : "21.0.0"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "5b92f029fab2cce44386d28588098b5be0824ef5",
+        "version" : "7.11.0"
+      }
+    },
+    {
+      "identity" : "uniqueid",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/karwa/uniqueid",
+      "state" : {
+        "revision" : "0b0a36949d1ff5e02dc1c0aaee7461f12a768d07",
+        "version" : "1.0.4"
+      }
+    }
+  ],
+  "version" : 2
+}
