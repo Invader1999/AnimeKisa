@@ -23,6 +23,7 @@
 		1F5DAD942BAE9172005390CF /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DAD932BAE9172005390CF /* MoreView.swift */; };
 		1F92FA902BB02BA800016E29 /* TodayAnimeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F92FA8F2BB02BA800016E29 /* TodayAnimeViewModel.swift */; };
 		1F92FA932BB02D4F00016E29 /* AnimeDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F92FA922BB02D4F00016E29 /* AnimeDataModel.swift */; };
+		1FB1B0B82BBD098E0003BFE6 /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB1B0B72BBD098E0003BFE6 /* NavigationTransitions */; };
 		1FC5DB1B2BB7B11F0072C394 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5DB1A2BB7B11F0072C394 /* SearchView.swift */; };
 		1FC5DB1E2BB7BB380072C394 /* UniqueID in Frameworks */ = {isa = PBXBuildFile; productRef = 1FC5DB1D2BB7BB380072C394 /* UniqueID */; };
 		1FCF58592BB3C972009DE8F5 /* SeasonAnimeFullView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCF58582BB3C972009DE8F5 /* SeasonAnimeFullView.swift */; };
@@ -97,6 +98,7 @@
 				1F43979B2BB53E1B00170437 /* KeychainSwift in Frameworks */,
 				1FE0BFA12BB01470001D4C49 /* Kingfisher in Frameworks */,
 				1FC5DB1E2BB7BB380072C394 /* UniqueID in Frameworks */,
+				1FB1B0B82BBD098E0003BFE6 /* NavigationTransitions in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,6 +505,7 @@
 				1FE0BFA02BB01470001D4C49 /* Kingfisher */,
 				1F43979A2BB53E1B00170437 /* KeychainSwift */,
 				1FC5DB1D2BB7BB380072C394 /* UniqueID */,
+				1FB1B0B72BBD098E0003BFE6 /* NavigationTransitions */,
 			);
 			productName = AnimeKisa;
 			productReference = 1FE4179E2BAD491100B6D727 /* AnimeKisa.app */;
@@ -536,6 +539,7 @@
 				1FE0BF9F2BB01470001D4C49 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				1F4397992BB53E1B00170437 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				1FC5DB1C2BB7BB380072C394 /* XCRemoteSwiftPackageReference "uniqueid" */,
+				1FB1B0B62BBD098E0003BFE6 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
 			);
 			productRefGroup = 1FE4179F2BAD491100B6D727 /* Products */;
 			projectDirPath = "";
@@ -814,6 +818,14 @@
 				minimumVersion = 21.0.0;
 			};
 		};
+		1FB1B0B62BBD098E0003BFE6 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.13.3;
+			};
+		};
 		1FC5DB1C2BB7BB380072C394 /* XCRemoteSwiftPackageReference "uniqueid" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/karwa/uniqueid";
@@ -837,6 +849,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1F4397992BB53E1B00170437 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		1FB1B0B72BBD098E0003BFE6 /* NavigationTransitions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FB1B0B62BBD098E0003BFE6 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
+			productName = NavigationTransitions;
 		};
 		1FC5DB1D2BB7BB380072C394 /* UniqueID */ = {
 			isa = XCSwiftPackageProductDependency;

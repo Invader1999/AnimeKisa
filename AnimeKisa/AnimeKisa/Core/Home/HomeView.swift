@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NavigationTransitions
 
 struct HomeView: View {
     
@@ -16,6 +17,7 @@ struct HomeView: View {
     @Environment(SeasonAnimeViewModel.self) var seasonAnimeViewModel
     @Environment(LoginViewModel.self) var loginViewModel
     @Environment(RecommendationViewModel.self) var recommendationViewModel
+    @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
     
     var body: some View {
         NavigationStack{
@@ -39,6 +41,7 @@ struct HomeView: View {
                 SeasonAnimeView()
                     .environment(customTabBarHide)
                     .environment(seasonAnimeViewModel)
+                    .environment(animeDetailsViewModel)
                     .padding(.top)
                 
                 RecommendationsView()
@@ -49,7 +52,9 @@ struct HomeView: View {
             .scrollClipDisabled()
            // .scrollContentBackground(.visible)
             .scrollIndicators(.hidden)
+
         }
+        .navigationTransition(.slide(axis: .vertical))
     }
 }
 
@@ -61,5 +66,6 @@ struct HomeView: View {
         .environment(SeasonAnimeViewModel())
         .environment(LoginViewModel())
         .environment(RecommendationViewModel())
+        .environment(AnimeDetailsViewModel())
 }
 

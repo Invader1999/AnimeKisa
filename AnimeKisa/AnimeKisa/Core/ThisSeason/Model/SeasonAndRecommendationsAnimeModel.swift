@@ -7,23 +7,22 @@
 
 import Foundation
 import UniqueID
-struct SeasonAndRecommendationsAnimeModel: Codable {
-    var id:UniqueID? = UniqueID.random()
-    //var id:String? = UUID().uuidString
+
+struct SeasonAndRecommendationsAnimeModel: Codable, Hashable,Identifiable {
+    
+    var id:String? = UUID().uuidString
     let data: [Datum]?
     let paging: Paging?
     let season: Season?
 }
 
-// MARK: - Datum
-struct Datum: Codable {
-    var id:UniqueID? = UniqueID.random()
+struct Datum: Codable, Hashable,Identifiable {
+    var id:String? = UUID().uuidString
     let node: Node?
 }
 
-// MARK: - Node
-struct Node: Codable {
-    let id: Int?
+struct Node: Codable, Hashable,Identifiable {
+    var id: Int?
     let title: String?
     let mainPicture: MainPicture?
 
@@ -31,20 +30,19 @@ struct Node: Codable {
         case id, title
         case mainPicture = "main_picture"
     }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
-// MARK: - MainPicture
-struct MainPicture: Codable {
+struct MainPicture: Codable, Hashable {
     let medium, large: String?
 }
 
-// MARK: - Paging
-struct Paging: Codable {
+struct Paging: Codable, Hashable {
 }
 
-// MARK: - Season
-struct Season: Codable {
+struct Season: Codable, Hashable {
     let year: Int?
     let season: String?
 }
-

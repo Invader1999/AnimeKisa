@@ -94,7 +94,7 @@ struct RecommendationAnimeScrollView: View {
         ScrollView(.horizontal){
             HStack(){
                 ForEach(recommendationAnimeViewModel.recommendationDataArray, id: \.id) { item in
-                    ForEach(item.data ?? [],id:\.node?.id){details in
+                    ForEach(item.data ?? [],id:\.self){details in
                         RecommendationAnimeTile(imageURL: details.node?.mainPicture?.medium ?? "", animeTitle: details.node?.title ?? "", rating: "0.00")
                     }
                 }

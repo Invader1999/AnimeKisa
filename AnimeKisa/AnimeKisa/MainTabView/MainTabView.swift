@@ -18,6 +18,7 @@ struct MainTabView: View {
     @State var seasonAnimeViewModel = SeasonAnimeViewModel()
     @State var loginViewModel = LoginViewModel()
     @State var recommendationViewModel = RecommendationViewModel()
+    @State var animeDetailsViewModel = AnimeDetailsViewModel()
     @State var showTabBar:Bool = true
     
     init(){
@@ -34,6 +35,7 @@ struct MainTabView: View {
                     .environment(seasonAnimeViewModel)
                     .environment(loginViewModel)
                     .environment(recommendationViewModel)
+                    .environment(animeDetailsViewModel)
                     
                 
                AnimeView()

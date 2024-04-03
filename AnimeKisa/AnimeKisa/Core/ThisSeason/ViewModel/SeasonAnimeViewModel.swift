@@ -47,6 +47,7 @@ class SeasonAnimeViewModel{
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(SeasonAndRecommendationsAnimeModel.self, from: data)
+            seasonAnimeDataArray.removeAll()
             print("Data received:", decodedData)
             seasonAnimeDataArray.append(decodedData)
             

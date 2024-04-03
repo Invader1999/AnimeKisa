@@ -5,59 +5,69 @@
 //  Created by Kareddy Hemanth Reddy on 26/03/24.
 //
 
-import SwiftUI
 import Kingfisher
+import SwiftUI
 
-enum SeasonAnimeDestination{
+enum SeasonAnimeDestination: Hashable {
     case seasonAnimeFullView
+    case animeDetailsView(Node)
 }
 
 struct SeasonAnimeView: View {
     @Environment(SeasonAnimeViewModel.self) var seasonAnimeViewModel
     @Environment(CustomTabBarHide.self) var customTabBarHide
+    @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
     var body: some View {
-        VStack{
-            HStack{
-                Text("This Season")
-                    .font(.title2)
-                    .bold()
-                Spacer()
-                NavigationLink(value: SeasonAnimeDestination.seasonAnimeFullView) {
-                    Image(systemName: "chevron.right")
-                        .foregroundStyle(.black)
+        ZStack {
+            VStack {
+                HStack {
+                    Text("This Season")
+                        .font(.title2)
                         .bold()
+                    Spacer()
+                    NavigationLink(value: SeasonAnimeDestination.seasonAnimeFullView) {
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.black)
+                            .bold()
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
 
+                SeasonAnimeScrollView()
+                    .environment(seasonAnimeViewModel)
             }
-            .frame(maxWidth: .infinity,alignment:.leading)
-            .padding(.horizontal)
             .task {
-                Task{
+                Task {
                     try await seasonAnimeViewModel.getSeasonalAnimeDetails(limit: "500")
                 }
             }
-            
-            SeasonAnimeScrollView()
-                .environment(seasonAnimeViewModel)
         }
         .navigationDestination(for: SeasonAnimeDestination.self) { destination in
-            switch destination{
+            switch destination {
             case .seasonAnimeFullView:
                 SeasonAnimeFullView()
                     .environment(customTabBarHide)
                     .environment(seasonAnimeViewModel)
+
+            case .animeDetailsView(let animeNode):
+                AnimeDetailsView(getAnime: animeNode)
+                    .environment(customTabBarHide)
+                    .environment(animeDetailsViewModel)
+                
             }
         }
-        
     }
 }
 
 #Preview {
-    SeasonAnimeView()
-        .environment(CustomTabBarHide())
-        .environment(SeasonAnimeViewModel())
+    NavigationStack {
+        SeasonAnimeView()
+            .environment(CustomTabBarHide())
+            .environment(SeasonAnimeViewModel())
+            .environment(AnimeDetailsViewModel())
+    }
 }
-
 
 struct SeasonAnimeTile: View {
     @State var imageURL: String
@@ -94,27 +104,36 @@ struct SeasonAnimeTile: View {
     }
 }
 
-
-
 struct SeasonAnimeScrollView: View {
     @Environment(SeasonAnimeViewModel.self) var seasonAnimeViewModel
     var body: some View {
-        ScrollView(.horizontal){
-            HStack(){
-                ForEach(seasonAnimeViewModel.seasonAnimeDataArray, id: \.id) { item in
-                    ForEach(item.data ?? [],id:\.node?.id){details in
-                        SeasonAnimeTile(imageURL: details.node?.mainPicture?.medium ?? "", animeTitle: details.node?.title ?? "", rating: "0.00")
-                    }
-                }
-            }
-            //.frame(maxWidth: .infinity,alignment: )
+        
+        ScrollView(.horizontal) {
+            SeasonAnimeForLoop()
+                .environment(seasonAnimeViewModel)
+            // .frame(maxWidth: .infinity,alignment: )
         }
         .scrollIndicators(.hidden)
     }
 }
 
-//#Preview(body: {
+// #Preview(body: {
 //    SeasonAnimeScrollView()
 //        .environment(CustomTabBarHide())
 //        .environment(SeasonAnimeViewModel())
-//})
+// })
+
+struct SeasonAnimeForLoop: View {
+    @Environment(SeasonAnimeViewModel.self) var seasonAnimeViewModel
+    var body: some View {
+        HStack {
+            ForEach(seasonAnimeViewModel.seasonAnimeDataArray) { datum in
+                ForEach(datum.data!, id: \.self) { insideData in
+                    NavigationLink(value: SeasonAnimeDestination.animeDetailsView(insideData.node ?? Node(id: 21, title: "", mainPicture: MainPicture(medium: "", large: "")))){
+                        SeasonAnimeTile(imageURL: insideData.node?.mainPicture?.medium ?? "", animeTitle: insideData.node?.title ?? "", rating: "0.00")
+                        }
+                    }
+            }
+        }
+    }
+}

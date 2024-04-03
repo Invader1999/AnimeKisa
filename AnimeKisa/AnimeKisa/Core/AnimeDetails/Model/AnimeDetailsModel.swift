@@ -9,30 +9,30 @@
 import Foundation
 
 struct AnimeDetailsModel: Codable {
-    let id: Int
-    let title: String
-    let mainPicture: AnimeDetailsPicture
-    let alternativeTitles: AnimeDetailsAlternativeTitles
-    let startDate, endDate, synopsis: String
-    let mean: Double
-    let rank, popularity, numListUsers, numScoringUsers: Int
-    let nsfw: String
-    let createdAt, updatedAt: Date
-    let mediaType, status: String
-    let genres: [AnimeDetailsGenre]
-    let numEpisodes: Int
-    let startSeason: AnimeDetailsStartSeason
-    let broadcast: AnimeDetailsBroadcast
-    let source: String
-    let averageEpisodeDuration: Int
-    let rating: String
-    let pictures: [AnimeDetailsPicture]
-    let background: String
-    let relatedAnime: [AnimeDetailsRelatedAnime]
-    let relatedManga: [AnimeDetailsJSONAny]
-    let recommendations: [AnimeDetailsRecommendation]
-    let studios: [AnimeDetailsGenre]
-    let statistics: AnimeDetailsStatistics
+    let id: Int?
+    let title: String?
+    let mainPicture: AnimeDetailsPicture?
+    let alternativeTitles: AnimeDetailsAlternativeTitles?
+    let startDate, endDate, synopsis: String?
+    let mean: Double?
+    let rank, popularity, numListUsers, numScoringUsers: Int?
+    let nsfw: String?
+    let createdAt, updatedAt: String?
+    let mediaType, status: String?
+    let genres: [AnimeDetailsGenre]?
+    let numEpisodes: Int?
+    let startSeason: AnimeDetailsStartSeason?
+    let broadcast: AnimeDetailsBroadcast?
+    let source: String?
+    let averageEpisodeDuration: Int?
+    let rating: String?
+    let pictures: [AnimeDetailsPicture]?
+    let background: String?
+    let relatedAnime: [AnimeDetailsRelatedAnime]?
+    let relatedManga: [AnimeDetailsJSONAny]?
+    let recommendations: [AnimeDetailsRecommendation]?
+    let studios: [AnimeDetailsGenre]?
+    let statistics: AnimeDetailsStatistics?
 
     enum CodingKeys: String, CodingKey {
         case id, title
@@ -76,7 +76,7 @@ struct AnimeDetailsBroadcast: Codable {
 }
 
 // MARK: - Genre
-struct AnimeDetailsGenre: Codable {
+struct AnimeDetailsGenre: Codable,Identifiable {
     let id: Int
     let name: String
 }
@@ -88,7 +88,7 @@ struct AnimeDetailsPicture: Codable {
 
 // MARK: - Recommendation
 struct AnimeDetailsRecommendation: Codable {
-    let node: AnimeDetailsNode
+    let node: AnimeDetailsNode?
     let numRecommendations: Int
 
     enum CodingKeys: String, CodingKey {
@@ -129,7 +129,7 @@ struct AnimeDetailsStartSeason: Codable {
 
 // MARK: - Statistics
 struct AnimeDetailsStatistics: Codable {
-    let status: Status
+    let status: AnimeDetailsStatus?
     let numListUsers: Int
 
     enum CodingKeys: String, CodingKey {
@@ -140,16 +140,55 @@ struct AnimeDetailsStatistics: Codable {
 
 // MARK: - Status
 struct AnimeDetailsStatus: Codable {
-    let watching, completed, onHold, dropped: String
-    let planToWatch: String
+    let watching: Int?
+        let completed: Int?
+        let onHold: Int?
+        let dropped: Int?
+        let planToWatch: Int?
 
     enum CodingKeys: String, CodingKey {
-        case watching, completed
+        case watching
+        case completed
         case onHold = "on_hold"
         case dropped
         case planToWatch = "plan_to_watch"
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let watchingString = try? container.decode(String.self, forKey: .watching) {
+            watching = Int(watchingString)
+        } else {
+            watching = try? container.decode(Int.self, forKey: .watching)
+        }
+        
+        if let completedString = try? container.decode(String.self, forKey: .completed) {
+            completed = Int(completedString)
+        } else {
+            completed = try? container.decode(Int.self, forKey: .completed)
+        }
+        
+        if let onHoldString = try? container.decode(String.self, forKey: .onHold) {
+            onHold = Int(onHoldString)
+        } else {
+            onHold = try? container.decode(Int.self, forKey: .onHold)
+        }
+        
+        if let droppedString = try? container.decode(String.self, forKey: .dropped) {
+            dropped = Int(droppedString)
+        } else {
+            dropped = try? container.decode(Int.self, forKey: .dropped)
+        }
+        
+        if let planToWatchString = try? container.decode(String.self, forKey: .planToWatch) {
+            planToWatch = Int(planToWatchString)
+        } else {
+            planToWatch = try? container.decode(Int.self, forKey: .planToWatch)
+        }
+    }
 }
+
 
 // MARK: - Encode/decode helpers
 
