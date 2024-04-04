@@ -24,7 +24,7 @@ enum TimeConversionError: Error {
 class TodayAnimeViewModel{
     
     var todayAnimeDataArray:[AnimeDataModel] = []
-    
+    var isLoaded = false
     func getTodayAiringAnimeData() async throws {
         var headers = [String: String]()
         headers["Content-Type"] = "application/json"
@@ -40,8 +40,7 @@ class TodayAnimeViewModel{
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = headers
         request.httpMethod = "GET"
-        request.cachePolicy = .useProtocolCachePolicy
-        todayAnimeDataArray.removeAll()
+        request.cachePolicy = .returnCacheDataElseLoad
         let (data, response) = try await URLSession.shared.data(for: request)
         // print("Top Airing Data",data,response)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
@@ -52,6 +51,7 @@ class TodayAnimeViewModel{
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(AnimeDataModel.self, from: data)
             // print("Data received:", decodedData)
+            todayAnimeDataArray.removeAll()
             todayAnimeDataArray.append(decodedData)
            print("TopAirAnimeData Array", todayAnimeDataArray)
         } catch {

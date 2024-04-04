@@ -68,7 +68,7 @@ class CalenderViewModel{
             var request = URLRequest(url: url)
             request.allHTTPHeaderFields = headers
             request.httpMethod = "GET"
-            request.cachePolicy = .useProtocolCachePolicy
+            request.cachePolicy = .returnCacheDataElseLoad
             animeAiringDataArray.removeAll()
             isLoading = true
             

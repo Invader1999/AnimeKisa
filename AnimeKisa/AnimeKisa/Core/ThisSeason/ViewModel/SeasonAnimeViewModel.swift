@@ -19,6 +19,7 @@ enum SeasonalAnimeError: Error {
 class SeasonAnimeViewModel{
     var seasonAnimeDataArray:[SeasonAndRecommendationsAnimeModel] = []
     var isLoading = false
+    var isLoaded = false
     
     func getSeasonalAnimeDetails(limit:String) async throws {
         var headers = [String: String]()
@@ -36,7 +37,7 @@ class SeasonAnimeViewModel{
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = headers
         request.httpMethod = "GET"
-        request.cachePolicy = .useProtocolCachePolicy
+        request.cachePolicy = .returnCacheDataElseLoad
         
         let (data, response) = try await URLSession.shared.data(for: request)
         // print("Anime Detail Data",data,response)

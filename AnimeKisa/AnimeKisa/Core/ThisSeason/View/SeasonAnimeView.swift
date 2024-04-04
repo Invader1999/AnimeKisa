@@ -36,10 +36,15 @@ struct SeasonAnimeView: View {
 
                 SeasonAnimeScrollView()
                     .environment(seasonAnimeViewModel)
+                    .frame(height: 200)
             }
             .task {
-                Task {
-                    try await seasonAnimeViewModel.getSeasonalAnimeDetails(limit: "500")
+                if seasonAnimeViewModel.isLoaded == false{
+                    Task {
+                        seasonAnimeViewModel.seasonAnimeDataArray.removeAll()
+                        try await seasonAnimeViewModel.getSeasonalAnimeDetails(limit: "500")
+                        seasonAnimeViewModel.isLoaded = true
+                    }
                 }
             }
         }
@@ -132,6 +137,7 @@ struct SeasonAnimeForLoop: View {
                     NavigationLink(value: SeasonAnimeDestination.animeDetailsView(insideData.node ?? Node(id: 21, title: "", mainPicture: MainPicture(medium: "", large: "")))){
                         SeasonAnimeTile(imageURL: insideData.node?.mainPicture?.medium ?? "", animeTitle: insideData.node?.title ?? "", rating: "0.00")
                         }
+                        .tint(.black)
                     }
             }
         }

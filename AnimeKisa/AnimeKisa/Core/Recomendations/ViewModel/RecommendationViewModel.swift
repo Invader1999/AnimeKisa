@@ -18,7 +18,7 @@ enum RecommendationAnimeError: Error {
 @Observable
 class RecommendationViewModel{
     var recommendationDataArray:[SeasonAndRecommendationsAnimeModel] = []
-    
+    var isLoaded = false
     func getRecommendationAnimeDetails(limit:String,accessToken:String) async throws {
         var headers = [String: String]()
         headers["X-MAL-CLIENT-ID"] = "e66dfc376c43baef1a33afd05b5ccce9"
@@ -34,8 +34,9 @@ class RecommendationViewModel{
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = headers
         request.httpMethod = "GET"
-        request.cachePolicy = .useProtocolCachePolicy
+        request.cachePolicy = .returnCacheDataElseLoad
         
+        recommendationDataArray.removeAll()
         let (data, response) = try await URLSession.shared.data(for: request)
         // print("Anime Detail Data",data,response)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {

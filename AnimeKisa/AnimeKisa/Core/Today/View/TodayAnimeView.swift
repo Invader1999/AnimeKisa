@@ -31,8 +31,11 @@ struct TodayAnimeView: View {
                 .frame(height: 150)
         }
         .task {
-            Task {
-                try await todayAnimeViewModel.getTodayAiringAnimeData()
+            if todayAnimeViewModel.isLoaded == false{
+                Task {
+                    try await todayAnimeViewModel.getTodayAiringAnimeData()
+                    todayAnimeViewModel.isLoaded = true
+                }
             }
         }
     }

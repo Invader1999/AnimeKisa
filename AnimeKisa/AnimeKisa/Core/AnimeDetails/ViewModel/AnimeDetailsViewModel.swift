@@ -24,7 +24,7 @@ class AnimeDetailsViewModel{
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = headers
         request.httpMethod = "GET"
-        request.cachePolicy = .useProtocolCachePolicy
+        request.cachePolicy = .returnCacheDataElseLoad
         animeDetails = nil
         let (data, response) = try await URLSession.shared.data(for: request)
         // print("Anime Detail Data",data,response)
