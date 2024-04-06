@@ -8,8 +8,9 @@
 import SwiftUI
 import Kingfisher
 
-enum RecommmendedDestination{
+enum RecommmendedDestination:Hashable{
     case recommendedDetailView
+    case animeDetailsView(AnimeDetailsModel)
 }
 
 
@@ -64,6 +65,8 @@ struct RecommendationsView: View {
                     .environment(customTabBarHide)
                     .environment(recommendationViewModel)
                     .environment(loginViewModel)
+            case .animeDetailsView(let animeDetails):
+                AnimeDetailsView(getAnime: animeDetails)
             }
         }
 //        .onChange(of: loginViewModel.token?.access_token, { oldValue, newValue in
@@ -95,9 +98,9 @@ struct RecommendationAnimeScrollView: View {
     var body: some View {
         ScrollView(.horizontal){
             HStack(){
-                ForEach(recommendationAnimeViewModel.recommendationDataArray, id: \.id) { item in
-                    ForEach(item.data ?? [],id:\.self){details in
-                        RecommendationAnimeTile(imageURL: details.node?.mainPicture?.medium ?? "", animeTitle: details.node?.title ?? "", rating: "0.00")
+                ForEach(recommendationAnimeViewModel.animeDetailsArray, id: \.id) { item in
+                    NavigationLink(value: RecommmendedDestination.animeDetailsView(item)) {
+                        RecommendationAnimeTile(imageURL: item.mainPicture?.large ?? "No Data", animeTitle: item.title ?? "No Data", rating: "\(item.mean ?? 0.00)")
                     }
                 }
             }
@@ -128,6 +131,7 @@ struct RecommendationAnimeTile: View {
                 .padding(.leading)
 
             Text(animeTitle)
+                .frame(maxWidth: .infinity,alignment:.leading)
                 .frame(width: 100, alignment: .leading)
                 .padding(.leading)
                 .lineLimit(2)

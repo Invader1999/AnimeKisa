@@ -10,21 +10,37 @@ import SwiftUI
 struct SeasonAnimeFullView: View {
     @Environment(CustomTabBarHide.self) var customTabBarHide
     @Environment(SeasonAnimeViewModel.self) var seasonAnimeViewModel
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         VStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()),GridItem(.flexible())]) {
-                    ForEach(seasonAnimeViewModel.seasonAnimeDataArray, id: \.id) { item in
-                        ForEach(item.data ?? [],id:\.node?.id){details in
-                            SeasonAnimeTile(imageURL: details.node?.mainPicture?.medium ?? "", animeTitle: details.node?.title ?? "", rating: "0.00")
+                    ForEach(seasonAnimeViewModel.animeDetailsArray) { datum in
+                        NavigationLink(value: SeasonAnimeDestination.animeDetailsView(datum)) {
+                            SeasonAnimeTile(imageURL: datum.mainPicture?.large ?? "No Data", animeTitle: datum.title ?? "No Data", rating: "\(datum.mean ?? 0.00)")
                         }
+                        .tint(.black)
                     }
                 }
+                
                 //.padding(.leading, 100)
                 .padding(.top)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                //.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
             }
             .scrollIndicators(.hidden)
+        }
+        .toolbar{
+            ToolbarItem(placement: .topBarLeading) {
+                HStack{
+                    Image(systemName: "chevron.left")
+                        .onTapGesture {
+                            dismiss()
+                        }
+                    Text("\(seasonAnimeViewModel.year) \(seasonAnimeViewModel.season)" )
+                        .bold()
+                        .font(.title2)
+                }
+            }
         }
         .onAppear {
             DispatchQueue.main.async {
@@ -43,4 +59,5 @@ struct SeasonAnimeFullView: View {
 #Preview {
     SeasonAnimeFullView()
         .environment(CustomTabBarHide())
+        .environment(SeasonAnimeViewModel())
 }

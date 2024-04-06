@@ -10,7 +10,7 @@ import SwiftUI
 
 enum SeasonAnimeDestination: Hashable {
     case seasonAnimeFullView
-    case animeDetailsView(Node)
+    case animeDetailsView(AnimeDetailsModel)
 }
 
 struct SeasonAnimeView: View {
@@ -42,7 +42,7 @@ struct SeasonAnimeView: View {
                 if seasonAnimeViewModel.isLoaded == false{
                     Task {
                         seasonAnimeViewModel.seasonAnimeDataArray.removeAll()
-                        try await seasonAnimeViewModel.getSeasonalAnimeDetails(limit: "500")
+                        try await seasonAnimeViewModel.getSeasonalAnimeDetails(limit: "20")
                         seasonAnimeViewModel.isLoaded = true
                     }
                 }
@@ -54,11 +54,13 @@ struct SeasonAnimeView: View {
                 SeasonAnimeFullView()
                     .environment(customTabBarHide)
                     .environment(seasonAnimeViewModel)
+                    .navigationBarBackButtonHidden()
 
             case .animeDetailsView(let animeNode):
                 AnimeDetailsView(getAnime: animeNode)
                     .environment(customTabBarHide)
                     .environment(animeDetailsViewModel)
+                    .navigationBarBackButtonHidden()
                 
             }
         }
@@ -96,7 +98,9 @@ struct SeasonAnimeTile: View {
 
             Text(animeTitle)
                 .frame(width: 100, alignment: .leading)
+                .frame(maxWidth: .infinity,alignment:.leading)
                 .padding(.leading)
+                .multilineTextAlignment(.leading)
                 .lineLimit(2)
 
             Text(rating)
@@ -106,6 +110,7 @@ struct SeasonAnimeTile: View {
                 .font(.callout)
                 .foregroundStyle(.gray)
         }
+        .frame(maxHeight: .infinity,alignment:.top)
     }
 }
 
@@ -131,14 +136,12 @@ struct SeasonAnimeScrollView: View {
 struct SeasonAnimeForLoop: View {
     @Environment(SeasonAnimeViewModel.self) var seasonAnimeViewModel
     var body: some View {
-        HStack {
-            ForEach(seasonAnimeViewModel.seasonAnimeDataArray) { datum in
-                ForEach(datum.data!, id: \.self) { insideData in
-                    NavigationLink(value: SeasonAnimeDestination.animeDetailsView(insideData.node ?? Node(id: 21, title: "", mainPicture: MainPicture(medium: "", large: "")))){
-                        SeasonAnimeTile(imageURL: insideData.node?.mainPicture?.medium ?? "", animeTitle: insideData.node?.title ?? "", rating: "0.00")
-                        }
-                        .tint(.black)
-                    }
+        LazyHStack {
+            ForEach(seasonAnimeViewModel.animeDetailsArray) { datum in
+                NavigationLink(value: SeasonAnimeDestination.animeDetailsView(datum)) {
+                    SeasonAnimeTile(imageURL: datum.mainPicture?.large ?? "No Data", animeTitle: datum.title ?? "No Data", rating: "\(datum.mean ?? 0.00)")
+                }
+                .tint(.black)
             }
         }
     }

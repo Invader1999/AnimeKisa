@@ -15,10 +15,13 @@ struct RecommendationsFullView: View {
         VStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()),GridItem(.flexible())]) {
-                    ForEach(recommendationViewModel.recommendationDataArray, id: \.self) { item in
-                        ForEach(item.data ?? [],id:\.self){details in
-                            RecommendationAnimeTile(imageURL: details.node?.mainPicture?.medium ?? "", animeTitle: details.node?.title ?? "", rating: "0.00")
-                        }
+//                    ForEach(recommendationViewModel.recommendationDataArray, id: \.self) { item in
+//                        ForEach(item.data ?? [],id:\.self){details in
+//                            RecommendationAnimeTile(imageURL: details.node?.mainPicture?.medium ?? "", animeTitle: details.node?.title ?? "", rating: "0.00")
+//                        }
+//                    }
+                    ForEach(recommendationViewModel.animeDetailsArray, id: \.id) { item in
+                        RecommendationAnimeTile(imageURL: item.mainPicture?.large ?? "No Data", animeTitle: item.title ?? "No Data", rating: "\(item.mean ?? 0.00)")
                     }
                 }
                 //.padding(.leading, 100)

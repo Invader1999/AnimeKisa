@@ -74,7 +74,7 @@ class LoginViewModel {
         
         var components = URLComponents(string: baseURL)!
         components.queryItems = queryItems
-        print("Authorisation get url", components.url)
+        print("Authorisation get url", components.url ?? "No Authorisation")
         return components.url!
     }
     
@@ -138,7 +138,7 @@ class LoginViewModel {
         
         var urlComponents = URLComponents(string: "https://myanimelist.net/v1/oauth2/token")
         urlComponents?.queryItems = queryItems
-        print("URL To get token:\(urlComponents?.url)")
+        //print("URL To get token:\(urlComponents?.url)")
         guard let url = urlComponents?.url else {
             print("Error: Could not create URL")
             return

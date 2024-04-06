@@ -8,7 +8,15 @@
 
 import Foundation
 
-struct AnimeDetailsModel: Codable {
+struct AnimeDetailsModel: Codable,Hashable,Identifiable {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    static func == (lhs: AnimeDetailsModel, rhs: AnimeDetailsModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
     let id: Int?
     let title: String?
     let mainPicture: AnimeDetailsPicture?
@@ -25,6 +33,9 @@ struct AnimeDetailsModel: Codable {
     let broadcast: AnimeDetailsBroadcast?
     let source: String?
     let averageEpisodeDuration: Int?
+    var averageEpisodeDurationInMinutes:Int{
+        return (averageEpisodeDuration ?? 1440)/60
+    }
     let rating: String?
     let pictures: [AnimeDetailsPicture]?
     let background: String?
@@ -60,14 +71,14 @@ struct AnimeDetailsModel: Codable {
 }
 
 // MARK: - AlternativeTitles
-struct AnimeDetailsAlternativeTitles: Codable {
-    let synonyms: [String]
-    let en, ja: String
+struct AnimeDetailsAlternativeTitles: Codable,Hashable {
+    let synonyms: [String]?
+    let en, ja: String?
 }
 
 // MARK: - Broadcast
-struct AnimeDetailsBroadcast: Codable {
-    let dayOfTheWeek, startTime: String
+struct AnimeDetailsBroadcast: Codable,Hashable {
+    let dayOfTheWeek, startTime: String?
 
     enum CodingKeys: String, CodingKey {
         case dayOfTheWeek = "day_of_the_week"
@@ -76,20 +87,20 @@ struct AnimeDetailsBroadcast: Codable {
 }
 
 // MARK: - Genre
-struct AnimeDetailsGenre: Codable,Identifiable {
-    let id: Int
-    let name: String
+struct AnimeDetailsGenre: Codable,Identifiable ,Hashable{
+    let id: Int?
+    let name: String?
 }
 
 // MARK: - Picture
-struct AnimeDetailsPicture: Codable {
-    let medium, large: String
+struct AnimeDetailsPicture: Codable,Hashable {
+    let medium, large: String?
 }
 
 // MARK: - Recommendation
-struct AnimeDetailsRecommendation: Codable {
+struct AnimeDetailsRecommendation: Codable,Hashable {
     let node: AnimeDetailsNode?
-    let numRecommendations: Int
+    let numRecommendations: Int?
 
     enum CodingKeys: String, CodingKey {
         case node
@@ -98,7 +109,7 @@ struct AnimeDetailsRecommendation: Codable {
 }
 
 // MARK: - Node
-struct AnimeDetailsNode: Codable {
+struct AnimeDetailsNode: Codable,Hashable {
     let id: Int
     let title: String
     let mainPicture: AnimeDetailsPicture
@@ -110,7 +121,7 @@ struct AnimeDetailsNode: Codable {
 }
 
 // MARK: - RelatedAnime
-struct AnimeDetailsRelatedAnime: Codable {
+struct AnimeDetailsRelatedAnime: Codable,Hashable {
     let node: AnimeDetailsNode
     let relationType, relationTypeFormatted: String
 
@@ -122,13 +133,13 @@ struct AnimeDetailsRelatedAnime: Codable {
 }
 
 // MARK: - StartSeason
-struct AnimeDetailsStartSeason: Codable {
+struct AnimeDetailsStartSeason: Codable,Hashable{
     let year: Int
     let season: String
 }
 
 // MARK: - Statistics
-struct AnimeDetailsStatistics: Codable {
+struct AnimeDetailsStatistics: Codable,Hashable {
     let status: AnimeDetailsStatus?
     let numListUsers: Int
 
@@ -139,7 +150,7 @@ struct AnimeDetailsStatistics: Codable {
 }
 
 // MARK: - Status
-struct AnimeDetailsStatus: Codable {
+struct AnimeDetailsStatus: Codable,Hashable {
     let watching: Int?
         let completed: Int?
         let onHold: Int?
@@ -197,9 +208,9 @@ class AnimeDetailsJSONNull: Codable, Hashable {
     public static func == (lhs: AnimeDetailsJSONNull, rhs: AnimeDetailsJSONNull) -> Bool {
         return true
     }
-
-    public var hashValue: Int {
-        return 0
+    
+    public func hash(into hasher: inout Hasher) {
+          hasher.combine(0)
     }
 
     public init() {}
@@ -430,4 +441,118 @@ class AnimeDetailsJSONAny: Codable {
             try AnimeDetailsJSONAny.encode(to: &container, value: self.value)
         }
     }
+}
+
+
+struct AnimeThemesModel: Codable,Identifiable {
+    var id:String?
+    let data: DataClass?
+}
+
+// MARK: - DataClass
+struct DataClass: Codable {
+    let openings, endings: [String]?
+}
+
+struct CharacterModel: Codable ,Identifiable{
+    var id:String? = UUID().uuidString
+    var data: [AnimeCharacterData]?
+}
+
+// MARK: - Datum
+struct AnimeCharacterData: Codable,Identifiable {
+   
+    
+    var id:String? = UUID().uuidString
+    let character: Character?
+    let role: Role?
+    let favorites: Int?
+    let voiceActors: [VoiceActor]?
+
+    enum CodingKeys: String, CodingKey {
+        case character, role, favorites
+        case voiceActors = "voice_actors"
+    }
+}
+
+// MARK: - Character
+struct Character: Codable,Identifiable {
+    var id: String? = UUID().uuidString
+    let malID: Int?
+    let url: String?
+    let images: CharacterImages?
+    let name: String?
+
+    enum CodingKeys: String, CodingKey {
+        case malID = "mal_id"
+        case url, images, name
+    }
+}
+
+// MARK: - CharacterImages
+struct CharacterImages: Codable {
+    let jpg: Jpg?
+    let webp: Webp?
+}
+
+// MARK: - Jpg
+struct Jpg: Codable {
+    let imageURL: String?
+
+    enum CodingKeys: String, CodingKey {
+        case imageURL = "image_url"
+    }
+}
+
+// MARK: - Webp
+struct Webp: Codable {
+    let imageURL, smallImageURL: String?
+
+    enum CodingKeys: String, CodingKey {
+        case imageURL = "image_url"
+        case smallImageURL = "small_image_url"
+    }
+}
+
+enum Role: String, Codable {
+    case main = "Main"
+    case supporting = "Supporting"
+}
+
+// MARK: - VoiceActor
+struct VoiceActor: Codable,Identifiable {
+    var id:String? = UUID().uuidString
+    let person: Person?
+    let language: Language?
+}
+
+enum Language: String, Codable {
+    case english = "English"
+    case french = "French"
+    case german = "German"
+    case hebrew = "Hebrew"
+    case italian = "Italian"
+    case japanese = "Japanese"
+    case korean = "Korean"
+    case portugueseBR = "Portuguese (BR)"
+    case spanish = "Spanish"
+}
+
+// MARK: - Person
+struct Person: Codable,Identifiable {
+    var id: String? = UUID().uuidString
+    let malID: Int?
+    let url: String?
+    let images: PersonImages?
+    let name: String?
+
+    enum CodingKeys: String, CodingKey {
+        case malID = "mal_id"
+        case url, images, name
+    }
+}
+
+// MARK: - PersonImages
+struct PersonImages: Codable {
+    let jpg: Jpg?
 }

@@ -9,17 +9,20 @@ import Kingfisher
 import SwiftUI
 
 struct AnimeDetailsView: View {
-    @State var title: String = ""
-    @State var genres: [String] = ["Action", "Adventure", "Action", "Isekai", "Romance", "Sports"]
+//    @State var title: String = ""
+//    @State var genres: [String] = ["Action", "Adventure", "Action", "Isekai", "Romance", "Sports"]
     @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
-    @State var getAnime: Node
+    @Environment(CustomTabBarHide.self) var customTabBarHide
+    @Environment(\.dismiss) var dismiss
+    @State var getAnime: AnimeDetailsModel
     // @State var value1:String
     var body: some View {
         ScrollView {
-            VStack {
+            LazyVStack {
                 VStack {
                     HStack {
-                        KFImage(URL(string: getAnime.mainPicture?.medium ?? ""))
+                        KFImage(URL(string: getAnime.mainPicture?.large
+                                ?? ""))
                             .resizable()
                             .placeholder {
                                 RoundedRectangle(cornerRadius: 12)
@@ -37,20 +40,21 @@ struct AnimeDetailsView: View {
                             Text(getAnime.title ?? "")
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            TopLabel(icon: "movieclapper.fill", value: animeDetailsViewModel.animeDetails?.source ?? "No Data")
-                            TopLabel(icon: "stopwatch", value: "\(animeDetailsViewModel.animeDetails?.numEpisodes ?? 0)")
-                            TopLabel(icon: "dot.radiowaves.up.forward", value: animeDetailsViewModel.animeDetails?.status ?? "No Data")
-                            TopLabel(icon: "star.fill", value: animeDetailsViewModel.animeDetails?.rating ?? "0.00")
+                            TopLabel(icon: "movieclapper.fill", value: getAnime.source ?? "No Data")
+                            TopLabel(icon: "stopwatch", value: "\(getAnime.numEpisodes ?? 0)")
+                            TopLabel(icon: "dot.radiowaves.up.forward", value: getAnime.status ?? "No Data")
+                            TopLabel(icon: "star.fill", value: "\(getAnime.mean ?? 0.00)")
                         }
-                        .padding(.bottom, 30)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                        .padding(.trailing)
                     }
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
 
                 ScrollView(.horizontal) {
                     HStack {
-                        ForEach(animeDetailsViewModel.animeDetails?.genres ?? [], id: \.id) { genre in
-                            Text(genre.name)
+                        ForEach(getAnime.genres ?? [], id: \.id) { genre in
+                            Text(genre.name ?? "No Data")
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 4)
                                 .overlay {
@@ -60,35 +64,73 @@ struct AnimeDetailsView: View {
                         }
                     }
                 }
+                .padding(.top)
                 .scrollIndicators(.hidden)
                 .scrollClipDisabled()
 
-                SynopsisView()
+                SynopsisView(getAnime: getAnime)
+                    .padding(.top)
+                    .environment(animeDetailsViewModel)
+
+                StatsView(getAnime: getAnime)
+                    .padding(.top)
+                    .environment(animeDetailsViewModel)
+
+                MoreInfoView(getAnime: getAnime)
+                    .padding(.top)
+                    .environment(animeDetailsViewModel)
+
+                CharcatersView()
+                    .padding(.top)
                     .environment(animeDetailsViewModel)
                 
-                StatsView()
+                VoiceActorsView()
+                    .padding(.top)
                     .environment(animeDetailsViewModel)
                 
-                
+                ThemesView()
+                    .padding(.top)
+                    .environment(animeDetailsViewModel)
+            }
+            .navigationBarBackButtonHidden()
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarLeading) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .onTapGesture {
+                                dismiss()
+                            }
+                        Text("Details")
+                            .font(.title2)
+                    }
+                }
+            })
+            .onAppear {
+                customTabBarHide.show = false
             }
             .onDisappear {
-                getAnime.id = nil
+                customTabBarHide.show = true
+                // getAnime.id = nil
             }
             .task {
                 Task {
-                    try await animeDetailsViewModel.getRecommendationAnimeDetails(id: getAnime.id ?? 21)
+                    // try await animeDetailsViewModel.getAnimeDetails(id: getAnime.id ?? 21)
+                    try await animeDetailsViewModel.getAnimeThemesDetails(id: getAnime.id ?? 21)
+                    try await animeDetailsViewModel.getAnimeCharacters(id: getAnime.id ?? 21)
                 }
             }
             .padding(.leading)
         }
+        .scrollIndicators(.hidden)
+        .scrollClipDisabled()
     }
-    
 }
 
-#Preview {
-    AnimeDetailsView(title: "Tsuki ga Michubiku Isekai Douchuu 2nd Season", getAnime: Node(id: 21, title: "", mainPicture: MainPicture(medium: "", large: "")))
-        .environment(AnimeDetailsViewModel())
-}
+// #Preview {
+//    AnimeDetailsView(title: "Tsuki ga Michubiku Isekai Douchuu 2nd Season", getAnime: Node(id: 21, title: "", mainPicture: MainPicture(medium: "", large: "")))
+//        .environment(AnimeDetailsViewModel())
+//        .environment(CustomTabBarHide())
+// }
 
 struct TopLabel: View {
     @State var icon: String
@@ -109,71 +151,14 @@ struct GenreTile: View {
     }
 }
 
-struct SynopsisView: View {
-    @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
-    @State var showFullText:Bool = false
-    var body: some View {
-        VStack {
-            if let animeDetails = animeDetailsViewModel.animeDetails?.synopsis {
-                Text(animeDetails)
-                    .lineLimit(showFullText ? 20 : 5)
-                    .frame(maxWidth: .infinity,alignment: .leading)
-                    .multilineTextAlignment(.leading)
-            }
-            Image(systemName: showFullText ? "chevron.up" : "chevron.down")
-                .onTapGesture {
-                    withAnimation(.spring) {
-                        showFullText.toggle()
-                    }
-                }
-                .padding(.top)
-        }
-    }
-}
 
-struct StatsView: View {
-    @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
-    var body: some View {
-        VStack(spacing:10){
-            Text("Stats")
-                .frame(maxWidth: .infinity,alignment: .leading)
-                .bold()
-            HStack(spacing:15){
-                if let animeDetails = animeDetailsViewModel.animeDetails{
-                    StatsIcons(label: "chart.bar.fill", value: "#\(animeDetails.rank ?? 0)")
-                        
-                    Divider()
-                        .foregroundStyle(.black)
-                    
-                    StatsIcons(label: "hand.thumbsup.fill", value: "\(animeDetails.numScoringUsers ?? 0)")
-                    
-                    Divider()
-                        .foregroundStyle(.black)
-                    
-                    StatsIcons(label: "person.2.fill", value: "\(animeDetails.numListUsers ?? 0)")
-                    
-                    Divider()
-                        .foregroundStyle(.black)
-                    
-                    StatsIcons(label: "bolt.horizontal.fill", value: "\(animeDetails.popularity ?? 0)")
-                }
-            }
-            .frame(maxWidth: .infinity,alignment: .leading)
-        }
-        .frame(maxWidth: .infinity,alignment: .leading)
-    }
-}
 
-struct StatsIcons: View {
-    @State var label:String
-    @State var value:String?
-    var body: some View {
-        VStack(spacing:8){
-            Image(systemName: label)
-            Text(value ?? "0")
-        }
-        .frame(maxWidth: .infinity,alignment: .leading)
-        .frame(maxHeight: .infinity,alignment: .top)
-    }
-}
+
+
+
+
+
+
+
+
 
