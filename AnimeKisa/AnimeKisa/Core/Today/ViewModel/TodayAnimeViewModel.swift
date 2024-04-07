@@ -22,8 +22,9 @@ enum TimeConversionError: Error {
 
 @Observable
 class TodayAnimeViewModel{
-    
+    var animeThemes:[AnimeThemesModel] = []
     var todayAnimeDataArray:[AnimeDataModel] = []
+    var charactersArray:[CharacterModel] = []
     var isLoaded = false
     func getTodayAiringAnimeData() async throws {
         var headers = [String: String]()
@@ -59,7 +60,68 @@ class TodayAnimeViewModel{
             throw TodayAnimeListError.InvalidData
         }
     }
+    func getAnimeThemesDetails(id:Int) async throws {
+        var headers = [String: String]()
+        headers["Content-Type"] = "application/json"
+         
+        let endpoint = "https://api.jikan.moe/v4/anime/\(id)/themes"
+        
+        guard let url = URL(string: endpoint) else { throw AnimeDetailsError.InvalidURL }
+        
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = headers
+        request.httpMethod = "GET"
+        request.cachePolicy = .returnCacheDataElseLoad
+        animeThemes.removeAll()
+        let (data, response) = try await URLSession.shared.data(for: request)
+        // print("Anime Detail Data",data,response)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw AnimeDetailsError.InvalidResponse
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            let decodedData = try decoder.decode(AnimeThemesModel.self, from: data)
+            print("Anime Themes Data received:", decodedData)
+            animeThemes.append(decodedData)
+            
+        } catch {
+            print(error)
+            throw AnimeDetailsError.InvalidData
+        }
+        // print(animeDetailDataArray)
+    }
     
+    func getAnimeCharacters(id:Int) async throws {
+        var headers = [String: String]()
+        headers["Content-Type"] = "application/json"
+         
+        let endpoint = "https://api.jikan.moe/v4/anime/\(id)/characters"
+        
+        guard let url = URL(string: endpoint) else { throw AnimeDetailsError.InvalidURL }
+        
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = headers
+        request.httpMethod = "GET"
+        request.cachePolicy = .returnCacheDataElseLoad
+        charactersArray.removeAll()
+        let (data, response) = try await URLSession.shared.data(for: request)
+        // print("Anime Detail Data",data,response)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw AnimeDetailsError.InvalidResponse
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            let decodedData = try decoder.decode(CharacterModel.self, from: data)
+            print("Charcaters Data received:", decodedData)
+            charactersArray.append(decodedData)
+            
+        } catch {
+            print(error)
+            throw AnimeDetailsError.InvalidData
+        }
+    }
   
 //    func convertTime(fromTimeZone: String, dateTime: String, toTimeZone: String, dstAmbiguity: String) async throws -> Data {
 //        let url = URL(string: "https://timeapi.io/api/Conversion/ConvertTimeZone")!

@@ -6,15 +6,22 @@
 import Foundation
 
 // MARK: - Welcome
-struct AnimeDataModel: Codable{
+struct AnimeDataModel: Codable,Identifiable,Hashable{
     var id:String? = UUID().uuidString
     let pagination: Pagination?
     let data: [TodayAnimeDatum]?
 }
 
 // MARK: - Datum
-struct TodayAnimeDatum: Codable {
-    let id:String? = UUID().uuidString
+struct TodayAnimeDatum: Codable,Identifiable,Hashable{
+    static func == (lhs: TodayAnimeDatum, rhs: TodayAnimeDatum) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    var id:String? = UUID().uuidString
     let malID: Int?
     let url: String?
     let images: [String: TodayAnimeImage]?
@@ -138,7 +145,7 @@ struct TodayAnimeDatum: Codable {
 
 
 // MARK: - Aired
-struct TodayAnimeAired: Codable {
+struct TodayAnimeAired: Codable,Hashable {
     let from: String?
     let to: String?
     let prop: TodayAnimeProp?
@@ -146,17 +153,17 @@ struct TodayAnimeAired: Codable {
     
 }
 // MARK: - Prop
-struct TodayAnimeProp: Codable {
+struct TodayAnimeProp: Codable,Hashable {
     let from, to: From?
 }
 
 // MARK: - From
-struct From: Codable {
+struct From: Codable,Hashable {
     let day, month, year: Int?
 }
 
 // MARK: - Broadcast
-struct TodayAnimeBroadcast: Codable {
+struct TodayAnimeBroadcast: Codable,Hashable {
     let day: String?
     let time: String?
     let timezone: TodayAnimeTimezone?
@@ -167,12 +174,12 @@ struct TodayAnimeBroadcast: Codable {
 //    case sundays = "Sundays"
 //}
 
-enum TodayAnimeTimezone: String, Codable {
+enum TodayAnimeTimezone: String, Codable,Hashable {
     case asiaTokyo = "Asia/Tokyo"
 }
 
 // MARK: - Demographic
-struct TodayAnimeDemographic: Codable {
+struct TodayAnimeDemographic: Codable,Hashable {
     let malID: Int?
     let type: TodayAnimeDemographicType?
     let name: String?
@@ -189,7 +196,7 @@ enum TodayAnimeDemographicType: String, Codable {
 }
 
 // MARK: - Image
-struct TodayAnimeImage: Codable {
+struct TodayAnimeImage: Codable ,Hashable{
     let imageURL, smallImageURL, largeImageURL: String?
 
     enum CodingKeys: String, CodingKey {
@@ -219,7 +226,7 @@ enum Status: String, Codable {
 }
 
 // MARK: - Title
-struct Title: Codable {
+struct Title: Codable,Hashable {
     let type: TodayAnimeTitleType?
     let title: String?
 }
@@ -236,7 +243,7 @@ enum TodayAnimeTitleType: String, Codable {
 }
 
 // MARK: - Trailer
-struct TodayAnimeTrailer: Codable {
+struct TodayAnimeTrailer: Codable,Hashable {
     let youtubeID: String?
     let url, embedURL: String?
     let images: TodayAnimeImages?
@@ -250,7 +257,7 @@ struct TodayAnimeTrailer: Codable {
 }
 
 // MARK: - Images
-struct TodayAnimeImages: Codable {
+struct TodayAnimeImages: Codable,Hashable {
     let imageURL, smallImageURL, mediumImageURL, largeImageURL: String?
     let maximumImageURL: String?
 
@@ -268,7 +275,7 @@ enum TodayAnimeDatumType: String, Codable {
 }
 
 // MARK: - Pagination
-struct Pagination: Codable {
+struct Pagination: Codable,Hashable {
     let lastVisiblePage: Int?
     let hasNextPage: Bool?
     let currentPage: Int?
@@ -283,7 +290,7 @@ struct Pagination: Codable {
 }
 
 // MARK: - Items
-struct TodayAnimeItems: Codable {
+struct TodayAnimeItems: Codable,Hashable {
     let count, total, perPage: Int?
 
     enum CodingKeys: String, CodingKey {

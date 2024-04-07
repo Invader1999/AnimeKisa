@@ -461,8 +461,6 @@ struct CharacterModel: Codable ,Identifiable{
 
 // MARK: - Datum
 struct AnimeCharacterData: Codable,Identifiable {
-   
-    
     var id:String? = UUID().uuidString
     let character: Character?
     let role: Role?

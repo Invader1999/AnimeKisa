@@ -48,6 +48,7 @@ struct HomeView: View {
                     .environment(customTabBarHide)
                     .environment(loginViewModel)
                     .environment(recommendationViewModel)
+                    .environment(animeDetailsViewModel)
             }
             .scrollClipDisabled()
            // .scrollContentBackground(.visible)

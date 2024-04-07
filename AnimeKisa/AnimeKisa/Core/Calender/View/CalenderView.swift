@@ -9,7 +9,11 @@ import Foundation
 import Kingfisher
 import SwiftUI
 
+enum CalenderViewDestination:Hashable{
+    case todayAnimeDetailsView(TodayAnimeDatum)
+}
 struct CalenderView: View {
+    @Environment(TodayAnimeViewModel.self) var todayAnimeViewModel
     @Environment(CustomTabBarHide.self) var customTabBarHide
     @Environment(CalenderViewModel.self) var calenderViewModel
     @State var isLoading = true
@@ -18,8 +22,8 @@ struct CalenderView: View {
                 CalenderScrollView()
                     .environment(calenderViewModel)
         }
-        .navigationTitle("Calender")
-        .navigationBarTitleDisplayMode(.large)
+//        .navigationTitle("Calender")
+//        .navigationBarTitleDisplayMode(.large)
         .onChange(of: calenderViewModel.selectedDay) { _, newValue in
             Task {
                 try await calenderViewModel.getAiringAnimeData(day: newValue)
@@ -44,6 +48,15 @@ struct CalenderView: View {
                 calenderViewModel.selectedDay = calenderViewModel.getCurrentDayString()
             }
         }
+        .navigationDestination(for: CalenderViewDestination.self, destination: { destinations in
+            switch destinations{
+            case .todayAnimeDetailsView(let todayAnimeDetails):
+                TodayAnimeDetailsView(getAnime: todayAnimeDetails)
+                     .environment(todayAnimeViewModel)
+                     .environment(customTabBarHide)
+                     .navigationBarBackButtonHidden()
+            }
+        })
     }
 }
 
@@ -51,6 +64,7 @@ struct CalenderView: View {
     CalenderView()
         .environment(CustomTabBarHide())
         .environment(CalenderViewModel())
+        .environment(TodayAnimeViewModel())
 }
 
 struct CalenderAnimeTile: View {
@@ -100,11 +114,14 @@ struct CalenderScrollView: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                 ForEach(calenderViewModel.animeAiringDataArray, id: \.id) { innerData in
-                    ForEach(innerData.data ?? [], id: \.id) { finalData in
-                        if let imageUrl = finalData.images?.values.first?.imageURL {
-                            CalenderAnimeTile(imageURL: imageUrl, animeTitle: finalData.title ?? "", airingTime: finalData.BrodcastTime ?? "00:00", calenderViewModel: calenderViewModel)
+                        ForEach(innerData.data ?? [], id:\.id) { finalData in
+                            if let imageUrl = finalData.images?.values.first?.imageURL {
+                                NavigationLink(value: CalenderViewDestination.todayAnimeDetailsView(finalData)) {
+                                    CalenderAnimeTile(imageURL: imageUrl, animeTitle: finalData.title ?? "", airingTime: finalData.BrodcastTime ?? "00:00", calenderViewModel: calenderViewModel)
+                                }
+                            }
                         }
-                    }
+                    
                 }
             }
             .padding(.leading, 100)

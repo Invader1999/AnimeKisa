@@ -59,3 +59,49 @@ struct MoreInfoRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+
+struct TodayAnimeMoreInfoView: View {
+    @Environment(TodayAnimeViewModel.self) var todayAnimeViewModel
+    @State var getAnime: TodayAnimeDatum
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            Text("More Info")
+                .bold()
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            MoreInfoRow(label: "Synonyms", value: getAnime.titleSynonyms?.first)
+            MoreInfoRow(label: "Japanese", value: getAnime.titleJapanese)
+            MoreInfoRow(label: "English", value: getAnime.titleEnglish)
+
+            Divider()
+                .background(.black)
+                .padding(.leading, -20)
+
+            MoreInfoRow(label: "Start Date", value: formattedDate(getAnime.aired?.from))
+            MoreInfoRow(label: "End Date", value: formattedDate(getAnime.aired?.to))
+            MoreInfoRow(label: "Broadcast", value: "\(getAnime.broadcast?.string ?? "No Data")")
+            MoreInfoRow(label: "Duration", value: "\(getAnime.duration ?? "24")")
+
+            Divider()
+                .background(.black)
+                .padding(.leading, -20)
+            MoreInfoRow(label: "Studios", value: getAnime.studios?.first?.name)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    private func formattedDate(_ dateString: String?) -> String {
+           guard let dateString = dateString else { return "No Data" }
+           let dateFormatter = DateFormatter()
+           dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+           if let date = dateFormatter.date(from: dateString) {
+               dateFormatter.dateFormat = "yyyy-MM-dd"
+               return dateFormatter.string(from: date)
+           } else {
+               return "Invalid Date"
+           }
+       }
+    
+}
+

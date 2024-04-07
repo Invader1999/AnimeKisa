@@ -48,6 +48,7 @@ struct CategoryTileView: View {
                 CalenderView()
                     .environment(calenderViewModel)
                     .environment(customTabBarHide)
+                    .environment(todayAnimeViewModel)
             }
         }
     }

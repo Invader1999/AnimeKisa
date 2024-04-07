@@ -9,13 +9,10 @@ import Kingfisher
 import SwiftUI
 
 struct AnimeDetailsView: View {
-//    @State var title: String = ""
-//    @State var genres: [String] = ["Action", "Adventure", "Action", "Isekai", "Romance", "Sports"]
     @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
     @Environment(CustomTabBarHide.self) var customTabBarHide
     @Environment(\.dismiss) var dismiss
     @State var getAnime: AnimeDetailsModel
-    // @State var value1:String
     var body: some View {
         ScrollView {
             LazyVStack {

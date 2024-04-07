@@ -13,6 +13,7 @@
 		1F4397972BB5349900170437 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4397962BB5349900170437 /* LoginViewModel.swift */; };
 		1F43979B2BB53E1B00170437 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1F43979A2BB53E1B00170437 /* KeychainSwift */; };
 		1F43979D2BB5422100170437 /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43979C2BB5422100170437 /* TokenModel.swift */; };
+		1F46DA5D2BC2459C00DF9780 /* TodayAnimeDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F46DA5C2BC2459C00DF9780 /* TodayAnimeDetailsView.swift */; };
 		1F49150A2BB150A300FACC45 /* CalenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4915092BB150A300FACC45 /* CalenderView.swift */; };
 		1F4B74FE2BB17C2700858865 /* CalenderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4B74FD2BB17C2700858865 /* CalenderViewModel.swift */; };
 		1F5DAD8A2BAE8A6D005390CF /* Property List.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F5DAD892BAE8A6D005390CF /* Property List.plist */; };
@@ -63,6 +64,7 @@
 		1F4397962BB5349900170437 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		1F4397982BB53B6300170437 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F43979C2BB5422100170437 /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
+		1F46DA5C2BC2459C00DF9780 /* TodayAnimeDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayAnimeDetailsView.swift; sourceTree = "<group>"; };
 		1F4915092BB150A300FACC45 /* CalenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderView.swift; sourceTree = "<group>"; };
 		1F4B74FD2BB17C2700858865 /* CalenderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewModel.swift; sourceTree = "<group>"; };
 		1F5DAD892BAE8A6D005390CF /* Property List.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Property List.plist"; sourceTree = "<group>"; };
@@ -225,6 +227,8 @@
 		1FA9FFD92BC135D70087176C /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				1FE0BF942BAFE7E4001D4C49 /* CategoryTile */,
+				1FDC15EF2BAF41570031ADC1 /* SearchBar */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -232,7 +236,6 @@
 		1FC5DB172BB7B0F90072C394 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				1FC5DB192BB7B1070072C394 /* ViewModel */,
 				1FC5DB182BB7B1010072C394 /* View */,
 			);
 			path = Search;
@@ -244,13 +247,6 @@
 				1FC5DB1A2BB7B11F0072C394 /* SearchView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		1FC5DB192BB7B1070072C394 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		1FD892212BB51F02009DDA34 /* Recomendations */ = {
@@ -453,8 +449,6 @@
 			isa = PBXGroup;
 			children = (
 				1F4397982BB53B6300170437 /* Info.plist */,
-				1FE0BF942BAFE7E4001D4C49 /* CategoryTile */,
-				1FDC15EF2BAF41570031ADC1 /* SearchBar */,
 				1FDC15E82BAF37850031ADC1 /* Main */,
 				1FDC15DE2BAF1AA70031ADC1 /* Custom Tab Bar */,
 				1FDC15E72BAF37640031ADC1 /* MainTabView */,
@@ -494,6 +488,7 @@
 				1FA9FFE72BC137160087176C /* StatsView.swift */,
 				1FA9FFE92BC137560087176C /* SynopsisView.swift */,
 				89139B102BBAD38A00B362FB /* AnimeDetailsView.swift */,
+				1F46DA5C2BC2459C00DF9780 /* TodayAnimeDetailsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -599,6 +594,7 @@
 			files = (
 				1FA9FFEA2BC137560087176C /* SynopsisView.swift in Sources */,
 				1FE0BF962BAFE7FE001D4C49 /* CategoryTileView.swift in Sources */,
+				1F46DA5D2BC2459C00DF9780 /* TodayAnimeDetailsView.swift in Sources */,
 				1FA9FFE02BC136640087176C /* VoiceActorsView.swift in Sources */,
 				1F43979D2BB5422100170437 /* TokenModel.swift in Sources */,
 				1FA9FFE62BC136BA0087176C /* MoreInfoView.swift in Sources */,

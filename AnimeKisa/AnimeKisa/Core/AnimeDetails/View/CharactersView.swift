@@ -31,3 +31,29 @@ struct CharcatersView: View {
         
     }
 }
+
+struct TodayAnimeCharcatersView: View {
+    @Environment(TodayAnimeViewModel.self) var todayAnimeViewModel
+    var body: some View {
+        LazyVStack(){
+            Text("Charcaters")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top)
+
+            ScrollView(.horizontal) {
+                LazyHStack {
+                    ForEach(todayAnimeViewModel.charactersArray, id: \.id) { characterData in
+                        ForEach(characterData.data ?? [], id: \.id) { character in
+                            CharacterAndVoiceActorsTileView(imageURL: character.character?.images?.jpg?.imageURL, title: character.character?.name)
+                        }
+                    }
+                }
+            }
+            .frame(height:190)
+            .scrollIndicators(.hidden)
+            .scrollClipDisabled()
+        }
+        
+    }
+}
+

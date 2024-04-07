@@ -18,6 +18,7 @@ struct RecommendationsView: View {
     @Environment(CustomTabBarHide.self) var customTabBarHide
     @Environment(LoginViewModel.self) var loginViewModel
     @Environment(RecommendationViewModel.self) var recommendationViewModel
+    @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
     
     var body: some View {
         VStack{
@@ -67,6 +68,9 @@ struct RecommendationsView: View {
                     .environment(loginViewModel)
             case .animeDetailsView(let animeDetails):
                 AnimeDetailsView(getAnime: animeDetails)
+                    .environment(customTabBarHide)
+                    .environment(animeDetailsViewModel)
+                    .navigationBarBackButtonHidden()
             }
         }
 //        .onChange(of: loginViewModel.token?.access_token, { oldValue, newValue in
@@ -87,10 +91,13 @@ struct RecommendationsView: View {
 }
 
 #Preview {
-    RecommendationsView()
-        .environment(CustomTabBarHide())
-        .environment(LoginViewModel())
-        .environment(RecommendationViewModel())
+    NavigationStack{
+        RecommendationsView()
+            .environment(CustomTabBarHide())
+            .environment(LoginViewModel())
+            .environment(RecommendationViewModel())
+            .environment(AnimeDetailsViewModel())
+    }
 }
 
 struct RecommendationAnimeScrollView: View {
@@ -102,6 +109,8 @@ struct RecommendationAnimeScrollView: View {
                     NavigationLink(value: RecommmendedDestination.animeDetailsView(item)) {
                         RecommendationAnimeTile(imageURL: item.mainPicture?.large ?? "No Data", animeTitle: item.title ?? "No Data", rating: "\(item.mean ?? 0.00)")
                     }
+                    
+                    .tint(.black)
                 }
             }
             //.frame(maxWidth: .infinity,alignment: )
@@ -133,8 +142,10 @@ struct RecommendationAnimeTile: View {
             Text(animeTitle)
                 .frame(maxWidth: .infinity,alignment:.leading)
                 .frame(width: 100, alignment: .leading)
+                .multilineTextAlignment(.leading)
                 .padding(.leading)
                 .lineLimit(2)
+                .foregroundStyle(.black)
 
             Text(rating)
                 .frame(width: 100, alignment: .leading)

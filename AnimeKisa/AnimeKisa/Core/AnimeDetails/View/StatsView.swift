@@ -58,3 +58,35 @@ struct StatsIcons: View {
 }
 
 
+struct TodayAnimeStatsView: View {
+    @Environment(TodayAnimeViewModel.self) var todayanimeViewModel
+    @State var getAnime: TodayAnimeDatum
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Stats")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .bold()
+            HStack(spacing: 15) {
+                StatsIcons(label: "chart.bar.fill", value: "#\(getAnime.rank ?? 0)", secondaryLable: "")
+
+                Divider()
+                    .foregroundStyle(.black)
+
+                StatsIcons(label: "hand.thumbsup.fill", value: "\(getAnime.scoredBy ?? 0)", secondaryLable: "hand.thumbsdown.fill")
+
+                Divider()
+                    .foregroundStyle(.black)
+
+                StatsIcons(label: "person.2.fill", value: "\(getAnime.members ?? 0)", secondaryLable: "")
+
+                Divider()
+                    .foregroundStyle(.black)
+
+                StatsIcons(label: "bolt.horizontal.fill", value: "\(getAnime.popularity ?? 0)", secondaryLable: "")
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+

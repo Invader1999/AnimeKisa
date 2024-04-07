@@ -7,9 +7,12 @@
 import Kingfisher
 import SwiftUI
 
+enum TodayAnimeDestionation:Hashable{
+    case animeDetailsView(TodayAnimeDatum)
+}
 struct TodayAnimeView: View {
     @Environment(TodayAnimeViewModel.self) var todayAnimeViewModel
-    @Environment(CustomTabBarHide.self) var customTabBar
+    @Environment(CustomTabBarHide.self) var customTabBarViewModel
 
     var body: some View {
         VStack {
@@ -30,6 +33,16 @@ struct TodayAnimeView: View {
                 .padding(.leading)
                 .frame(height: 150)
         }
+        .navigationDestination(for: TodayAnimeDestionation.self , destination: { destinations in
+            switch destinations{
+            case .animeDetailsView(let todayAnimeDetails):
+               TodayAnimeDetailsView(getAnime: todayAnimeDetails)
+                    .environment(todayAnimeViewModel)
+                    .environment(customTabBarViewModel)
+                    .navigationBarBackButtonHidden()
+                
+            }
+        })
         .task {
             if todayAnimeViewModel.isLoaded == false{
                 Task {
@@ -51,7 +64,10 @@ struct TodayAnimeScrollView: View {
                 ForEach(todayAnimeiViewModel.todayAnimeDataArray, id: \.id) { innerData in
                     ForEach(innerData.data ?? [], id: \.id) { finalData in
                         if let imageUrl = finalData.images?.values.first?.imageURL{
-                            TodayAnimeTileView(imageURL: imageUrl, animeTitle: finalData.title ?? "", airingTime:finalData.convertedBroadcastTime ?? "", rating: finalData.score ?? 0.0)
+                            NavigationLink(value: TodayAnimeDestionation.animeDetailsView(finalData)) {
+                                TodayAnimeTileView(imageURL: imageUrl, animeTitle: finalData.title ?? "", airingTime:finalData.convertedBroadcastTime ?? "", rating: finalData.score ?? 0.0)
+                            }
+                            .tint(.black)
                         }
                     }
                 }
@@ -101,6 +117,7 @@ struct TodayAnimeTileView: View {
                     .frame(width: 200,alignment: .leading)
                     .padding(.leading)
                     .lineLimit(2)
+                    .multilineTextAlignment(.leading)
                 
                 Text(airingTime)
                     .frame(width: 200,alignment: .leading)
