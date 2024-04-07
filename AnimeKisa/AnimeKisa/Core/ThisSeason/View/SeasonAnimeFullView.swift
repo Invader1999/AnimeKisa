@@ -12,7 +12,7 @@ struct SeasonAnimeFullView: View {
     @Environment(SeasonAnimeViewModel.self) var seasonAnimeViewModel
     @Environment(\.dismiss) var dismiss
     var body: some View {
-        VStack {
+        LazyVStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()),GridItem(.flexible())]) {
                     ForEach(seasonAnimeViewModel.animeDetailsArray) { datum in
@@ -47,11 +47,11 @@ struct SeasonAnimeFullView: View {
                 customTabBarHide.show = false
             }
         }
-        .onDisappear {
-            DispatchQueue.main.async {
-                customTabBarHide.show = true
-            }
-        }
+//        .onDisappear {
+//            DispatchQueue.main.async {
+//                customTabBarHide.show = true
+//            }
+//        }
     }
     
 }

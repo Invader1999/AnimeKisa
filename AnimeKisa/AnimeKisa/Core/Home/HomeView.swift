@@ -37,7 +37,7 @@ struct HomeView: View {
                     .environment(customTabBarHide)
                     .environment(todayAnimeViewModel)
                     .padding(.top)
-                
+                 
                 SeasonAnimeView()
                     .environment(customTabBarHide)
                     .environment(seasonAnimeViewModel)
@@ -49,6 +49,12 @@ struct HomeView: View {
                     .environment(loginViewModel)
                     .environment(recommendationViewModel)
                     .environment(animeDetailsViewModel)
+            }
+            .onAppear{
+                customTabBarHide.show = true
+            }
+            .onDisappear{
+                customTabBarHide.show = false
             }
             .scrollClipDisabled()
            // .scrollContentBackground(.visible)

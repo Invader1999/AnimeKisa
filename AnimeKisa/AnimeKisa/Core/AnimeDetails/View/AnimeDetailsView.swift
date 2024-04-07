@@ -105,10 +105,10 @@ struct AnimeDetailsView: View {
             .onAppear {
                 customTabBarHide.show = false
             }
-            .onDisappear {
-                customTabBarHide.show = true
-                // getAnime.id = nil
-            }
+//            .onDisappear {
+//                customTabBarHide.show = true
+//                // getAnime.id = nil
+//            }
             .task {
                 Task {
                     // try await animeDetailsViewModel.getAnimeDetails(id: getAnime.id ?? 21)

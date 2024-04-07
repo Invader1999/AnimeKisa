@@ -129,11 +129,11 @@ struct TodayAnimeDetailsView: View {
                     customTabBarHide.show = false
                 }
             }
-            .onDisappear {
-                DispatchQueue.main.async {
-                    customTabBarHide.show = true
-                }
-            }
+//            .onDisappear {
+//                DispatchQueue.main.async {
+//                    customTabBarHide.show = true
+//                }
+//            }
             
         }
         .scrollIndicators(.hidden)

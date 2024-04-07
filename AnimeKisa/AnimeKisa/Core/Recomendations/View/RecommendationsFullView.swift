@@ -17,7 +17,7 @@ struct RecommendationsFullView: View {
     @Environment(AnimeDetailsViewModel.self) var animeDetailsViewModel
     @Environment(LoginViewModel.self) var loginViewModel
     var body: some View {
-        VStack {
+        LazyVStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()),GridItem(.flexible())]) {
                     ForEach(recommendationViewModel.animeDetailsArray, id: \.id) { item in
@@ -53,11 +53,11 @@ struct RecommendationsFullView: View {
                 customTabBarHide.show = false
             }
         }
-        .onDisappear {
-            DispatchQueue.main.async {
-                customTabBarHide.show = true
-            }
-        }
+//        .onDisappear {
+//            DispatchQueue.main.async {
+//                customTabBarHide.show = true
+//            }
+//        }
     }
     
 }

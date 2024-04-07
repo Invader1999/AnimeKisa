@@ -44,7 +44,7 @@ struct CalenderView: View {
         }
         .onDisappear {
             DispatchQueue.main.async {
-                customTabBarHide.show = true
+                //customTabBarHide.show = true
                 calenderViewModel.selectedDay = calenderViewModel.getCurrentDayString()
             }
         }
@@ -92,6 +92,7 @@ struct CalenderAnimeTile: View {
                 .frame(width: 100, alignment: .leading)
                 .padding(.leading)
                 .lineLimit(2)
+                .multilineTextAlignment(.leading)
 
             Text(airingTime)
                 .frame(width: 100, alignment: .leading)
@@ -119,6 +120,7 @@ struct CalenderScrollView: View {
                                 NavigationLink(value: CalenderViewDestination.todayAnimeDetailsView(finalData)) {
                                     CalenderAnimeTile(imageURL: imageUrl, animeTitle: finalData.title ?? "", airingTime: finalData.BrodcastTime ?? "00:00", calenderViewModel: calenderViewModel)
                                 }
+                                .tint(.black)
                             }
                         }
                     
